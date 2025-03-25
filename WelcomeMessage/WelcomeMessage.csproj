@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>WelcomeMessage</AssemblyName>
+		<RootNamespace>WelcomeMessage</RootNamespace>
+		<Copyright>Fallout01</Copyright>
+	</PropertyGroup>
+</Project>
