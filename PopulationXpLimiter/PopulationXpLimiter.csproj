@@ -21,11 +21,6 @@
 		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="ExMod.Exiled" Version="9.5.1" />
-	</ItemGroup>
-
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass" HintPath="C:\Kadava-SL\PopulationXpLimiter\PopulationXpLimiter\packages\ExMod.Exiled.8.12.2\lib\net48">
       <Private>False</Private>

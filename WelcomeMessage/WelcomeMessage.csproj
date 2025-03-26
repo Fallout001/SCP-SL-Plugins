@@ -2,6 +2,6 @@
 	<PropertyGroup>
 		<AssemblyName>WelcomeMessage</AssemblyName>
 		<RootNamespace>WelcomeMessage</RootNamespace>
-		<Copyright>Fallout01</Copyright>
+		<Copyright>Fallout001</Copyright>
 	</PropertyGroup>
 </Project>
