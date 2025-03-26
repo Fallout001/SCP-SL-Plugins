@@ -14,8 +14,11 @@ namespace EffectOnHUD
 
 
         public int EffectDisplayDuration { get; set; } = 5;
-        public string DisplayHeader { get; set; } = "Your effects: \n";
-        public string EffectDisplayColor { get; set; }
-        public string EffectDisplayPosition { get; set; }
+        public string DisplayHeader { get; set; } = "Your effects:";
+        public string EffectDisplayColorGood { get; set; } = "#228B22";
+        public string EffectDisplayColorBad { get; set; } = "#C50000";
+        public string EffectDisplayColorMixed { get; set; } = "#8137CE";
+        public string EffectDisplayAlignment { get; set; } = "left";
+        public int EffectDisplayFontSize { get; set; } = 20;
     }
 }

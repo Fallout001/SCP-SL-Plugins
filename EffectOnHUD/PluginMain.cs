@@ -35,28 +35,6 @@ namespace EffectOnHUD
             ServerSpecificSettings.DeInitialize();
             base.OnDisabled();
         }
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            if (sender is PlayerCommandSender pcs)
-            {
-                var player = Player.List.Where(x => x.UserId == pcs.SenderId).FirstOrDefault();
-                if (player == null)
-                {
-                    response = "Must be coming from a valid player";
-                    return false;
-                }
-                response = "Your effects: \n";
-                foreach (var effect in player.ActiveEffects)
-                {
-                    string effectName = EffectTypeExtension.GetEffectType(effect).ToString();
-                    response += effectName + $" (d: {effect.Duration} i:{effect.Intensity})" + "\n";
-                }
-                return true;
-
-            }
-            response = "Must be coming from Player!";
-            return false;
-        }
     }
 
 }

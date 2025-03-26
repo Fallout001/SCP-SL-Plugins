@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
 using Exiled.API.Extensions;
 using Exiled.Events.Commands.Reload;
+using System.ComponentModel;
 
 namespace EffectOnHUD
 {
@@ -21,7 +22,7 @@ namespace EffectOnHUD
             showEffectsKb = new SSKeybindSetting(null, "Show my Effects");
             var Settings = new List<ServerSpecificSettingBase>
                             {
-                                new SSGroupHeader("EffectOnHud", false),
+                                new SSGroupHeader("Effects On HUD", false),
                                 showEffectsKb
                             };
             ServerSpecificSettingsSync.DefinedSettings = Settings.ToArray();
@@ -45,29 +46,10 @@ namespace EffectOnHUD
             }
             if (keybindSetting.SettingId == showEffectsKb.SettingId)
             {
-
                 var player = Player.Get(hub);
                 if (player != null)
                 {
-                    string response = "<align=\"left\"><size=20>Your Effects: \n";
-
-
-                    foreach (var effect in player.ActiveEffects)
-                    {
-                       
-                        string effectName = EffectTypeExtension.GetEffectType(effect).ToString();
-                        if(effect.Duration != 0)
-                        {
-                            response += effectName + $" ({(int)effect.TimeLeft} s, Intensity:{effect.Intensity})" + "\n";
-                        }
-                        else
-                        {
-                            response += effectName + $" (Infinite, Intensity:{effect.Intensity})" + "\n";
-                        }
-                       
-                    }
-                    response += "</size></align>";
-                    player.ShowHint(response, 5);
+                    ShowEffects.ShowEffectsOnHUD(player);
                 }
             }
         }
