@@ -12,7 +12,7 @@ namespace PopulationXpLimiter
 
         public int BroadcastDelay { get; set; } // Amount of time in seconds to delay the Broadcast before it appears after the round has started
 
-        public bool XPAlreadyReEnabled { get; set; } // boolean to signify whether the Xp system has already shown re-enabled status
+        public bool XPAlreadyReEnabled { get; set; } // boolean to signify whether the Xp system has already shown re-enabled status message 
 
         public string BroadcastMessageDisableXP { get; set; } = "<color=white> <u> <b> <color=yellow> Alert: <color=white> The <color=Green> XP-System <color=white> Has been Disabled Due to Low Population";
         public string BroadcastMessageReEnableXP { get; set; } = "<color=white> <u> <b> <color=yellow> WARNING: <color=white> The <color=Green> XP-System <color=white> Has been Re-Enabled";

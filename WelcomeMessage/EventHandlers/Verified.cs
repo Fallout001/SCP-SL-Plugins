@@ -11,7 +11,7 @@ namespace WelcomeMessage.EventHandlers
     {
         public static void onVerified(VerifiedEventArgs ev)
         {
-            ev.Player.ShowHint("Welcome To Kadava's Kingdom", 8);
+            ev.Player.ShowHint(Main.Instance.Config.WelcomeMessageDisplay, 8);
         }
     }
 }
