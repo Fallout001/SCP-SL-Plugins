@@ -2,7 +2,7 @@
 
 # Summary
 
-Hi, My name Is Fallout and this is my collection of plugins i have made for SCP:SL:
+Hi, My name Is Fallout and this is my collection of plugins i have made for SCP:SL Using The Exiled Framework
 
 **EffectOnHud** - A serverside Keybind a user can press to show a compact display of their current status effects
 
