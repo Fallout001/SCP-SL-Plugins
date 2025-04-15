@@ -19,6 +19,8 @@ namespace EffectOnHUD
         public string EffectDisplayColorBad { get; set; } = "#C50000";
         public string EffectDisplayColorMixed { get; set; } = "#8137CE";
         public string EffectDisplayAlignment { get; set; } = "left";
-        public int EffectDisplayFontSize { get; set; } = 20;
+        public float DefaultTextSize { get; set; } = 20;
+        public float MinTextSize { get; set; } = 10;
+        public float MaxTextSize { get; set; } = 50;
     }
 }
