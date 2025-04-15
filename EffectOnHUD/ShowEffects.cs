@@ -31,10 +31,10 @@ namespace EffectOnHUD
         "SinkHole",
         "Decontaminating",
         };
-        public static void ShowEffectsOnHUD(Player player)
+        public static void ShowEffectsOnHUD(Player player, bool showIntensity, int textSize)
         {
-            bool showIntensity = ServerSpecificSettings.showIntensityButton.SyncIsA;
-            int textSize = ServerSpecificSettings.textSizeSlider.SyncIntValue;
+            if (player == null || !player.IsAlive)
+                return;
 
             Log.Info($"Text Size: {textSize}");
             Log.Info($"Show Intensity: {showIntensity}");

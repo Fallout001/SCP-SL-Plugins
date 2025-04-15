@@ -45,18 +45,29 @@ namespace EffectOnHUD
 
         private static void ServerOnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase @base)
         {
-            var keybindSetting = @base as SSKeybindSetting;
-            if (keybindSetting == null || !keybindSetting.SyncIsPressed)
-            {
+            var player = Player.Get(hub);
+            if (player == null)
                 return;
-            }
-            if (keybindSetting.SettingId == showEffectsKb.SettingId)
+
+            // Check if the keybind setting was pressed
+            if (@base is SSKeybindSetting keybindSetting && keybindSetting.SettingId == showEffectsKb.SettingId)
             {
-                var player = Player.Get(hub);
-                if (player != null)
+                // Retrieve player-specific settings
+                bool showIntensity = false;
+                int textSize = (int)HUDPluginMain.Instance.Config.DefaultTextSize;
+
+                if (ServerSpecificSettings.showIntensityButton is SSTwoButtonsSetting intensitySetting)
                 {
-                    ShowEffects.ShowEffectsOnHUD(player);
+                    showIntensity = !intensitySetting.SyncIsB; // SyncIsA is true when SyncIsB is false
                 }
+
+                if (ServerSpecificSettings.textSizeSlider is SSSliderSetting sizeSetting)
+                {
+                    textSize = (int)sizeSetting.SyncIntValue;
+                }
+
+                // Call ShowEffectsOnHUD with player-specific settings
+                ShowEffects.ShowEffectsOnHUD(player, showIntensity, textSize);
             }
         }
     }
