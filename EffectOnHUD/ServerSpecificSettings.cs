@@ -4,6 +4,7 @@ using Exiled.Events.EventArgs;
 using Exiled.API.Features;
 using UserSettings.ServerSpecific;
 using System.Collections.Generic;
+using System.Collections;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
 using Exiled.API.Extensions;
 using Exiled.Events.Commands.Reload;
@@ -17,6 +18,7 @@ namespace EffectOnHUD
         public static SSKeybindSetting showEffectsKb;
         public static SSTwoButtonsSetting showIntensityButton;
         public static SSSliderSetting textSizeSlider;
+        public static Dictionary<ReferenceHub, (bool /* showIntensity */, float /* textSize */)> SettingsForPlayer = [];
 
         public static void Initialize()
         {
@@ -45,30 +47,34 @@ namespace EffectOnHUD
 
         private static void ServerOnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase @base)
         {
+            if (!SettingsForPlayer.TryGetValue(hub, out var val))
+            {
+                SettingsForPlayer.Add(hub, (false, HUDPluginMain.Instance.Config.MinTextSize));
+            }
+            var settings = SettingsForPlayer[hub];
+            
             var player = Player.Get(hub);
             if (player == null)
                 return;
 
+            if (@base is SSTwoButtonsSetting twoButton && twoButton.SettingId == showIntensityButton.SettingId)
+            {
+                settings.Item1 = twoButton.SyncIsA;
+            }
+
+            if (@base is SSSliderSetting slider && slider.SettingId == textSizeSlider.SettingId)
+            {
+                settings.Item2 = slider.SyncFloatValue;
+            }
+
             // Check if the keybind setting was pressed
             if (@base is SSKeybindSetting keybindSetting && keybindSetting.SettingId == showEffectsKb.SettingId)
             {
-                // Retrieve player-specific settings
-                bool showIntensity = false;
-                int textSize = (int)HUDPluginMain.Instance.Config.DefaultTextSize;
-
-                if (ServerSpecificSettings.showIntensityButton is SSTwoButtonsSetting intensitySetting)
-                {
-                    showIntensity = !intensitySetting.SyncIsB; // SyncIsA is true when SyncIsB is false
-                }
-
-                if (ServerSpecificSettings.textSizeSlider is SSSliderSetting sizeSetting)
-                {
-                    textSize = (int)sizeSetting.SyncIntValue;
-                }
-
                 // Call ShowEffectsOnHUD with player-specific settings
-                ShowEffects.ShowEffectsOnHUD(player, showIntensity, textSize);
+                ShowEffects.ShowEffectsOnHUD(player, settings.Item1, (int)settings.Item2);
             }
+
+            SettingsForPlayer[hub] = settings;
         }
     }
 }

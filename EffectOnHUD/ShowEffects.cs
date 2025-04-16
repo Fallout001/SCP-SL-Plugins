@@ -39,18 +39,6 @@ namespace EffectOnHUD
             Log.Info($"Text Size: {textSize}");
             Log.Info($"Show Intensity: {showIntensity}");
 
-            if (textSize == 0)
-            {
-                Log.Warn("SyncIntValue returned 0. Falling back to DebugValue.");
-                textSize = int.TryParse(ServerSpecificSettings.textSizeSlider.DebugValue, out int parsedValue) ? parsedValue : (int)HUDPluginMain.Instance.Config.DefaultTextSize;
-            }
-
-            if (!showIntensity && ServerSpecificSettings.showIntensityButton.DebugValue == "A")
-            {
-                Log.Warn("SyncIsA returned false. Falling back to DebugValue.");
-                showIntensity = true;
-            }
-
             string response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + HUDPluginMain.Instance.Config.DisplayHeader + " \n";
 
             string[] GoodEffects = { "AntiScp207", "Scp1853", "Invigorated", "BodyshotReduction", "DamageReduction", "MovementBoost", "RainbowTaste", "Vitality" };
@@ -82,7 +70,7 @@ namespace EffectOnHUD
                         }
                         else
                         {
-                            response += colorCode + effectName + $"</color> (Infinite)" + "\n";
+                            response += colorCode + effectName + $"</color> (∞)" + "\n";
                         }
                     }
                     else
@@ -92,11 +80,12 @@ namespace EffectOnHUD
                         {
                             if (effect.Duration != 0)
                             {
-                                response += colorCode + effectName + $"</color> ({(int)effect.TimeLeft} s, Intensity:{GetFormattedIntensity(effectName, effect.Intensity)})" + "\n";
+                                response += colorCode + effectName + $"</color> ({(int)effect.TimeLeft} s, {GetFormattedIntensity(effectName, effect.Intensity)})" + "\n";
+                               
                             }
                             else
                             {
-                                response += colorCode + effectName + $"</color> (Infinite, Intensity:{GetFormattedIntensity(effectName, effect.Intensity)})" + "\n";
+                                response += colorCode + effectName + $"</color> (∞, {GetFormattedIntensity(effectName, effect.Intensity)})" + "\n";
                             }
                         }
                         else
@@ -107,7 +96,7 @@ namespace EffectOnHUD
                             }
                             else
                             {
-                                response += colorCode + effectName + $"</color> (Infinite)" + "\n";
+                                response += colorCode + effectName + $"</color> (∞)" + "\n";
                             }
                         }
                     }
