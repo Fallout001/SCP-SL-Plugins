@@ -36,9 +36,6 @@ namespace EffectOnHUD
             if (player == null || !player.IsAlive)
                 return;
 
-            Log.Info($"Text Size: {textSize}");
-            Log.Info($"Show Intensity: {showIntensity}");
-
             string response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + HUDPluginMain.Instance.Config.DisplayHeader + " \n";
 
             string[] GoodEffects = { "AntiScp207", "Scp1853", "Invigorated", "BodyshotReduction", "DamageReduction", "MovementBoost", "RainbowTaste", "Vitality" };
