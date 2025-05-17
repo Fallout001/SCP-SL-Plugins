@@ -61,7 +61,7 @@ namespace EffectOnHUD
             if (@base is SSKeybindSetting keybindSetting && keybindSetting.SettingId == showEffectsKb.SettingId)
             {
                 // Call ShowEffectsOnHUD with player-specific settings
-                ShowEffects.ShowEffectsOnHUD(player, settings.Item1, (int)settings.Item2);
+                ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2);
             }
 
             SettingsForPlayer[hub] = settings;

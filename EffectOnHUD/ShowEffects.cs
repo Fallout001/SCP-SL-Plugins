@@ -1,5 +1,6 @@
 ﻿using LabApi.Events;
 using LabApi;
+using MEC;
 
 namespace EffectOnHUD
 {
@@ -23,6 +24,32 @@ namespace EffectOnHUD
         "SinkHole",
         "Decontaminating",
         };
+
+        private static readonly Dictionary<Player, CoroutineHandle> ActiveHudCoroutines = new();
+
+        private static IEnumerator<float> UpdateHudCoroutine(Player player, bool showIntensity, int textSize)
+        {
+            int updates = 5;
+            while (updates-- > 0) //loop 5 times for 5 seconds
+            {
+                ShowEffectsOnHUD(player, showIntensity, textSize);
+                yield return Timing.WaitForSeconds(1f);
+            }
+
+            player?.SendHint("", 1); // send blank when done
+            ActiveHudCoroutines.Remove(player);
+        }
+
+        public static void StartEffectHud(Player player, bool showIntensity, int textSize)
+        {
+            if (ActiveHudCoroutines.TryGetValue(player, out var handle))
+                Timing.KillCoroutines(handle); //if already coroutine running for it kill it 
+
+            CoroutineHandle newHandle = Timing.RunCoroutine(UpdateHudCoroutine(player, showIntensity, textSize)); 
+            ActiveHudCoroutines[player] = newHandle; // make a new coroutine for it 
+            //do this so that no overlap in coroutines 
+        }
+
         public static void ShowEffectsOnHUD(Player player, bool showIntensity, int textSize)
         {
             if (player == null || !player.IsAlive)
