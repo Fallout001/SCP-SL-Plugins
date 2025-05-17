@@ -11,22 +11,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WelcomeMessage", "WelcomeMe
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Exiled|Any CPU = Exiled|Any CPU
+		LapApi|Any CPU = LapApi|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.LapApi|Any CPU.Build.0 = LapApi|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.ActiveCfg = LapApi|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.Build.0 = LapApi|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
+		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
+		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
+		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

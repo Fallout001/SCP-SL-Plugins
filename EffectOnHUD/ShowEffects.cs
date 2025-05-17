@@ -1,17 +1,9 @@
-﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
-using Exiled.Events.EventArgs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using UserSettings.ServerSpecific;
+﻿using LabApi.Events;
+using LabApi;
 
 namespace EffectOnHUD
 {
-    internal class ShowEffects : ServerSpecificSettings
+    internal class ShowEffects
     {
         private static readonly HashSet<string> BinaryEffects = new HashSet<string>
         {
@@ -44,7 +36,7 @@ namespace EffectOnHUD
 
             foreach (var effect in player.ActiveEffects)
             {
-                string effectName = EffectTypeExtension.GetEffectType(effect).ToString();
+                string effectName = effect.name;
                 string colorCode = "<color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">"; // Default color for Bad effects"<color=#C50000>"
 
                 if (GoodEffects.Contains(effectName))
@@ -100,7 +92,7 @@ namespace EffectOnHUD
                 }
             }
             response += "</size></align>";
-            player.ShowHint(response, HUDPluginMain.Instance.Config.EffectDisplayDuration);
+            player.SendHint(response, HUDPluginMain.Instance.Config.EffectDisplayDuration);
         }
 
         private static string GetFormattedIntensity(string effectName, float intensity)

@@ -1,19 +1,9 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Interfaces;
-using Exiled.Events.EventArgs;
-using Exiled.API.Features;
-using UserSettings.ServerSpecific;
-using System.Collections.Generic;
-using System.Collections;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using Exiled.API.Extensions;
-using Exiled.Events.Commands.Reload;
-using System.ComponentModel;
-using Exiled.API.Features.Core.UserSettings;
+﻿using UserSettings.ServerSpecific;
+
 
 namespace EffectOnHUD
 {
-    internal class ServerSpecificSettings : Plugin<PluginConfig>
+    internal class ServerSpecificSettings
     {
         public static SSKeybindSetting showEffectsKb;
         public static SSTwoButtonsSetting showIntensityButton;

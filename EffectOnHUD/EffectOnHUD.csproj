@@ -5,6 +5,9 @@
 		<RootNamespace>EffectOnHUD</RootNamespace>
         <Description>Shows Status Effects when Keybind Pressed</Description>
 		<Copyright>Fallout01</Copyright>
+
+    <Configurations>LabApi;Exiled</Configurations>
+    
 	</PropertyGroup>
 
 </Project>
