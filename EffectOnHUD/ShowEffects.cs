@@ -6,6 +6,42 @@ namespace EffectOnHUD
 {
     internal class ShowEffects
     {
+        private static readonly Dictionary<Player, int> PlayerBaseHp = new();
+
+        private static readonly Dictionary<Player, Dictionary<string, int>> PlayerHpModifiers = new();
+
+        public static void SetBaseHp(Player player, int baseHp)
+        {
+            PlayerBaseHp[player] = baseHp;
+        }
+
+        public static void AddHpModifier(Player player, string source, int amount)
+        {
+            if (!PlayerHpModifiers.TryGetValue(player, out var mods))
+            {
+                mods = new Dictionary<string, int>();
+                PlayerHpModifiers[player] = mods;
+            }
+            mods[source] = amount;
+        }
+
+        public static void RemoveHpModifier(Player player, string source)
+        {
+            if (PlayerHpModifiers.TryGetValue(player, out var mods))
+            {
+                mods.Remove(source);
+                if (mods.Count == 0)
+                    PlayerHpModifiers.Remove(player);
+            }
+        }
+
+        public static int GetActualMaxHp(Player player)
+        {
+            int baseHp = PlayerBaseHp.TryGetValue(player, out var hp) ? hp : 100;
+            int mods = PlayerHpModifiers.TryGetValue(player, out var dict) ? dict.Values.Sum() : 0;
+            return baseHp + mods;
+        }
+
         private static readonly HashSet<string> BinaryEffects = new HashSet<string>
         {
         "Invisible",
@@ -60,6 +96,27 @@ namespace EffectOnHUD
             string[] GoodEffects = { "AntiScp207", "Scp1853", "Invigorated", "BodyshotReduction", "DamageReduction", "MovementBoost", "RainbowTaste", "Vitality" };
             string[] BadEffects = { "CardiacArrest", "Traumatized", "Scanned", "PocketCorroding", "Strangled", "SeveredHands", "Stained", "Hypothermia", "SinkHole", "Poisoned", "Asphyxiated", "Bleeding", "Blinded", "Burned", "Concussed", "Corroding", "Deafened", "Decontaminating", "Disabled", "Ensnared", "Exhausted", "Flashed", "Hemorrhage" };
             string[] MiscEffects = { "Scp1344", "Scp207", "Invisible", "SpawnProtected", "SilentWalk", "Ghostly" };
+
+            // In ShowEffectsOnHUD, after checking player validity:
+            int baseHp = PlayerBaseHp.TryGetValue(player, out var hp) ? hp : 100;
+
+            int ActualMaxHp = GetActualMaxHp(player);
+            response += "MaxHP: " + ActualMaxHp + "\n";
+            if (PlayerHpModifiers.TryGetValue(player, out var modifiers) && modifiers.Count > 0)
+            {
+                foreach (var kvp in modifiers) //for each key value pair in the modifiers dictionary
+                {
+                    if(kvp.Value > 0)
+                    {
+                        response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
+                    }
+                    else
+                    {
+                        response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">" + "-" + " </color>"; //if the value is positive, show it as a plus
+                    }
+                    response += $" {kvp.Value} {kvp.Key}\n";
+                }
+            }
 
             foreach (var effect in player.ActiveEffects)
             {
