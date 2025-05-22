@@ -1,4 +1,6 @@
-﻿using UserSettings.ServerSpecific;
+﻿using PlayerRoles;
+using PlayerRoles.Spectating;
+using UserSettings.ServerSpecific;
 
 
 namespace EffectOnHUD
@@ -13,6 +15,7 @@ namespace EffectOnHUD
         public static void Initialize()
         {
             showEffectsKb = new SSKeybindSetting(null, "Show my Effects");
+            showEffectsKb.PreventInteractionOnGUI = false;
             showIntensityButton = new SSTwoButtonsSetting(null, "Show Intensity", "True", "False");
             textSizeSlider = new SSSliderSetting(null, "Text Size", HUDPluginMain.Instance.Config.MinTextSize, HUDPluginMain.Instance.Config.MaxTextSize, HUDPluginMain.Instance.Config.DefaultTextSize);
 
@@ -37,6 +40,7 @@ namespace EffectOnHUD
 
         private static void ServerOnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase @base)
         {
+
             if (!SettingsForPlayer.TryGetValue(hub, out var val))
             {
                 SettingsForPlayer.Add(hub, (false, HUDPluginMain.Instance.Config.MinTextSize));
@@ -59,9 +63,34 @@ namespace EffectOnHUD
 
             // Check if the keybind setting was pressed
             if (@base is SSKeybindSetting keybindSetting && keybindSetting.SettingId == showEffectsKb.SettingId)
-            {
-                // Call ShowEffectsOnHUD with player-specific settings
-                ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2);
+            {;
+
+                if (player.Role == RoleTypeId.Spectator || player.Role == RoleTypeId.None) // if the player who pressed it is a spectator
+                {
+                    Player spectated = null;
+                    foreach (var person in Player.List) //loop through and find who they are spectating 
+                    {
+                        if (person.ReferenceHub.IsSpectatedBy(player.ReferenceHub)) // idk if this works lmao
+                        {
+                            spectated = person; //set that spectated person 
+                            break;
+                        }
+                    }
+
+                    if (spectated != null) // if player is spectating a person 
+                    {
+                        ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, spectated); // run it with that person being spectated effects 
+                    }
+                    else
+                    {
+                        //if it reaches here either they arent spectating a proper player or somthing broke :fire:
+                    }
+                }
+                else
+                {
+                    // Show the player's own effects because they are not spectator
+                    ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, player);
+                }
             }
 
             SettingsForPlayer[hub] = settings;

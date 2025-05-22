@@ -63,33 +63,31 @@ namespace EffectOnHUD
 
         private static readonly Dictionary<Player, CoroutineHandle> ActiveHudCoroutines = new();
 
-        private static IEnumerator<float> UpdateHudCoroutine(Player player, bool showIntensity, int textSize)
+        private static IEnumerator<float> UpdateHudCoroutine(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
             int updates = 5;
             while (updates-- > 0) //loop 5 times for 5 seconds
             {
-                ShowEffectsOnHUD(player, showIntensity, textSize);
+                ShowEffectsOnHUD(Recipient, showIntensity, textSize, ReadinPlayer);
                 yield return Timing.WaitForSeconds(1f);
             }
 
-            player?.SendHint("", 1); // send blank when done
-            ActiveHudCoroutines.Remove(player);
+            Recipient?.SendHint("", 1); // send blank when done
+            ActiveHudCoroutines.Remove(Recipient);
         }
 
-        public static void StartEffectHud(Player player, bool showIntensity, int textSize)
+        public static void StartEffectHud(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
-            if (ActiveHudCoroutines.TryGetValue(player, out var handle))
+            if (ActiveHudCoroutines.TryGetValue(Recipient, out var handle))
                 Timing.KillCoroutines(handle); //if already coroutine running for it kill it 
 
-            CoroutineHandle newHandle = Timing.RunCoroutine(UpdateHudCoroutine(player, showIntensity, textSize)); 
-            ActiveHudCoroutines[player] = newHandle; // make a new coroutine for it 
+            CoroutineHandle newHandle = Timing.RunCoroutine(UpdateHudCoroutine(Recipient, showIntensity, textSize, ReadinPlayer)); 
+            ActiveHudCoroutines[Recipient] = newHandle; // make a new coroutine for it 
             //do this so that no overlap in coroutines 
         }
 
-        public static void ShowEffectsOnHUD(Player player, bool showIntensity, int textSize)
+        public static void ShowEffectsOnHUD(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
-            if (player == null || !player.IsAlive)
-                return;
 
             string response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + HUDPluginMain.Instance.Config.DisplayHeader + " \n";
 
@@ -98,11 +96,11 @@ namespace EffectOnHUD
             string[] MiscEffects = { "Scp1344", "Scp207", "Invisible", "SpawnProtected", "SilentWalk", "Ghostly" };
 
             // In ShowEffectsOnHUD, after checking player validity:
-            int baseHp = PlayerBaseHp.TryGetValue(player, out var hp) ? hp : 100;
+            int baseHp = PlayerBaseHp.TryGetValue(ReadinPlayer, out var hp) ? hp : 100;
 
-            int ActualMaxHp = GetActualMaxHp(player);
+            int ActualMaxHp = GetActualMaxHp(ReadinPlayer);
             response += "MaxHP: " + ActualMaxHp + "\n";
-            if (PlayerHpModifiers.TryGetValue(player, out var modifiers) && modifiers.Count > 0)
+            if (PlayerHpModifiers.TryGetValue(ReadinPlayer, out var modifiers) && modifiers.Count > 0)
             {
                 foreach (var kvp in modifiers) //for each key value pair in the modifiers dictionary
                 {
@@ -118,7 +116,7 @@ namespace EffectOnHUD
                 }
             }
 
-            foreach (var effect in player.ActiveEffects)
+            foreach (var effect in ReadinPlayer.ActiveEffects)
             {
                 string effectName = effect.name;
                 string colorCode = "<color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">"; // Default color for Bad effects"<color=#C50000>"
@@ -176,7 +174,7 @@ namespace EffectOnHUD
                 }
             }
             response += "</size></align>";
-            player.SendHint(response, HUDPluginMain.Instance.Config.EffectDisplayDuration);
+            Recipient.SendHint(response, HUDPluginMain.Instance.Config.EffectDisplayDuration);
         }
 
         private static string GetFormattedIntensity(string effectName, float intensity)
