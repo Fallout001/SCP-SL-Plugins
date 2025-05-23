@@ -4,7 +4,7 @@ using MEC;
 
 namespace EffectOnHUD
 {
-    internal class ShowEffects
+    public class ShowEffects
     {
         private static readonly Dictionary<Player, int> PlayerBaseHp = new();
 
@@ -88,8 +88,17 @@ namespace EffectOnHUD
 
         public static void ShowEffectsOnHUD(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
+            string response;
 
-            string response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + HUDPluginMain.Instance.Config.DisplayHeader + " \n";
+            if (Recipient == ReadinPlayer)
+            {
+              response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + "Your Effects:" + " \n";
+            }
+            else
+            {
+              response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + $"{ReadinPlayer.Nickname}'s Effects:" + " \n";
+            }
+
 
             string[] GoodEffects = { "AntiScp207", "Scp1853", "Invigorated", "BodyshotReduction", "DamageReduction", "MovementBoost", "RainbowTaste", "Vitality" };
             string[] BadEffects = { "CardiacArrest", "Traumatized", "Scanned", "PocketCorroding", "Strangled", "SeveredHands", "Stained", "Hypothermia", "SinkHole", "Poisoned", "Asphyxiated", "Bleeding", "Blinded", "Burned", "Concussed", "Corroding", "Deafened", "Decontaminating", "Disabled", "Ensnared", "Exhausted", "Flashed", "Hemorrhage" };
