@@ -1,6 +1,7 @@
-﻿using LabApi.Events;
-using LabApi;
+﻿using LabApi;
+using LabApi.Events;
 using MEC;
+using PlayerRoles;
 
 namespace EffectOnHUD
 {
@@ -8,7 +9,12 @@ namespace EffectOnHUD
     {
         private static readonly Dictionary<Player, int> PlayerBaseHp = new();
 
-        private static readonly Dictionary<Player, Dictionary<string, int>> PlayerHpModifiers = new();
+        public static readonly Dictionary<Player, Dictionary<string, int>> PlayerHpModifiers = new();
+
+        public static void RemoveAllHpModifiers(Player player)
+        {
+            PlayerHpModifiers.Remove(player);
+        }
 
         public static void SetBaseHp(Player player, int baseHp)
         {

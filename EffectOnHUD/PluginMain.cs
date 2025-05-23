@@ -1,10 +1,13 @@
 ﻿using CommandSystem;
-using LabApi.Events;
 using LabApi;
+using LabApi.Events;
+using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Events.Handlers;
+using LabApi.Loader.Features.Plugins;
+using PlayerRoles;
+using RemoteAdmin;
 using System;
 using System.Linq;
-using RemoteAdmin;
-using LabApi.Loader.Features.Plugins;
 
 
 namespace EffectOnHUD
@@ -24,13 +27,24 @@ namespace EffectOnHUD
         {
             Instance = this;
             CL.Info("Effect Shown on HUD Plugin Enabled");
+            PlayerEvents.ChangedRole += OnPlayerRoleChanged;
             ServerSpecificSettings.Initialize();
         }
+
         public override void Disable()
         {
             Instance = null;
             CL.Info("Effect Shown on HUD Plugin Disabled");
+            PlayerEvents.ChangedRole -= OnPlayerRoleChanged;
             ServerSpecificSettings.DeInitialize();
+        }
+
+        private void OnPlayerRoleChanged(PlayerChangedRoleEventArgs ev)
+        {
+            if (ev.NewRole.RoleTypeId != RoleTypeId.Spectator || ev.OldRole != RoleTypeId.Spectator)
+            {
+                ShowEffects.PlayerHpModifiers.Remove(ev.Player);
+            }
         }
     }
 
