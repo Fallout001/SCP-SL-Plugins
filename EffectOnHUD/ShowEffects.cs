@@ -106,12 +106,13 @@ namespace EffectOnHUD
                     if(kvp.Value > 0)
                     {
                         response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
+                        response += $" {kvp.Value} {kvp.Key}\n";
                     }
                     else
                     {
                         response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">" + "-" + " </color>"; //if the value is positive, show it as a plus
+                        response += $" {kvp.Value * -1} {kvp.Key}\n";
                     }
-                    response += $" {kvp.Value} {kvp.Key}\n";
                 }
             }
 
