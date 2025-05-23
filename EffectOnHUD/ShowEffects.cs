@@ -35,13 +35,6 @@ namespace EffectOnHUD
             }
         }
 
-        public static int GetActualMaxHp(Player player)
-        {
-            int baseHp = PlayerBaseHp.TryGetValue(player, out var hp) ? hp : 100;
-            int mods = PlayerHpModifiers.TryGetValue(player, out var dict) ? dict.Values.Sum() : 0;
-            return baseHp + mods;
-        }
-
         private static readonly HashSet<string> BinaryEffects = new HashSet<string>
         {
         "Invisible",
@@ -104,10 +97,7 @@ namespace EffectOnHUD
             string[] BadEffects = { "CardiacArrest", "Traumatized", "Scanned", "PocketCorroding", "Strangled", "SeveredHands", "Stained", "Hypothermia", "SinkHole", "Poisoned", "Asphyxiated", "Bleeding", "Blinded", "Burned", "Concussed", "Corroding", "Deafened", "Decontaminating", "Disabled", "Ensnared", "Exhausted", "Flashed", "Hemorrhage" };
             string[] MiscEffects = { "Scp1344", "Scp207", "Invisible", "SpawnProtected", "SilentWalk", "Ghostly" };
 
-            // In ShowEffectsOnHUD, after checking player validity:
-            int baseHp = PlayerBaseHp.TryGetValue(ReadinPlayer, out var hp) ? hp : 100;
-
-            int ActualMaxHp = GetActualMaxHp(ReadinPlayer);
+            int ActualMaxHp = (int)ReadinPlayer.MaxHealth;
             response += "MaxHP: " + ActualMaxHp + "\n";
             if (PlayerHpModifiers.TryGetValue(ReadinPlayer, out var modifiers) && modifiers.Count > 0)
             {
