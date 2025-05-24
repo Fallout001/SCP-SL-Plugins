@@ -4,6 +4,7 @@ using LabApi.Events;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Handlers;
 using LabApi.Loader.Features.Plugins;
+using MEC;
 using PlayerRoles;
 using RemoteAdmin;
 using System;
@@ -23,6 +24,9 @@ namespace EffectOnHUD
         public override Version RequiredApiVersion => LabApi.Features.LabApiProperties.CurrentVersion;
 
         public static HUDPluginMain Instance;
+
+        public static readonly Dictionary<Player, bool> CanView = new();
+
         public override void Enable()
         {
             Instance = this;
@@ -41,7 +45,17 @@ namespace EffectOnHUD
 
         private void OnPlayerRoleChanged(PlayerChangedRoleEventArgs ev)
         {
-                ShowEffects.PlayerHpModifiers.Remove(ev.Player);
+            ShowEffects.PlayerHpModifiers.Remove(ev.Player);
+
+            if (!CanView.ContainsKey(ev.Player))
+                CanView.Add(ev.Player, false);
+            else
+                CanView[ev.Player] = false;
+
+            Timing.CallDelayed(5f, () =>
+            {
+                CanView[ev.Player] = true;
+            });
         }
     }
 }

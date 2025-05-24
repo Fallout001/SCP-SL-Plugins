@@ -64,32 +64,34 @@ namespace EffectOnHUD
             // Check if the keybind setting was pressed
             if (@base is SSKeybindSetting keybindSetting && keybindSetting.SettingId == showEffectsKb.SettingId)
             {;
-
-                if (player.Role == RoleTypeId.Spectator || player.Role == RoleTypeId.None) // if the player who pressed it is a spectator
+                if (HUDPluginMain.CanView.TryGetValue(player, out var value) && value == true)
                 {
-                    Player spectated = null;
-                    foreach (var person in Player.List) //loop through and find who they are spectating 
+                    if (player.Role == RoleTypeId.Spectator || player.Role == RoleTypeId.None) // if the player who pressed it is a spectator
                     {
-                        if (person.ReferenceHub.IsSpectatedBy(player.ReferenceHub)) // idk if this works lmao
+                        Player spectated = null;
+                        foreach (var person in Player.List) //loop through and find who they are spectating 
                         {
-                            spectated = person; //set that spectated person 
-                            break;
+                            if (person.ReferenceHub.IsSpectatedBy(player.ReferenceHub)) // idk if this works lmao
+                            {
+                                spectated = person; //set that spectated person 
+                                break;
+                            }
                         }
-                    }
 
-                    if (spectated != null) // if player is spectating a person 
-                    {
-                        ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, spectated); // run it with that person being spectated effects 
+                        if (spectated != null) // if player is spectating a person 
+                        {
+                            ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, spectated); // run it with that person being spectated effects 
+                        }
+                        else
+                        {
+                            //if it reaches here either they arent spectating a proper player or somthing broke :fire:
+                        }
                     }
                     else
                     {
-                        //if it reaches here either they arent spectating a proper player or somthing broke :fire:
+                        // Show the player's own effects because they are not spectator
+                        ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, player);
                     }
-                }
-                else
-                {
-                    // Show the player's own effects because they are not spectator
-                    ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, player);
                 }
             }
 
