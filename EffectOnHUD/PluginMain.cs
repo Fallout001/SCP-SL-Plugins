@@ -41,13 +41,9 @@ namespace EffectOnHUD
 
         private void OnPlayerRoleChanged(PlayerChangedRoleEventArgs ev)
         {
-            if (ev.NewRole.RoleTypeId != RoleTypeId.Spectator || ev.OldRole != RoleTypeId.Spectator)
-            {
                 ShowEffects.PlayerHpModifiers.Remove(ev.Player);
-            }
         }
     }
-
 }
 
 

@@ -9,7 +9,7 @@ namespace EffectOnHUD
     {
         private static readonly Dictionary<Player, int> PlayerBaseHp = new();
 
-        public static readonly Dictionary<Player, Dictionary<string, int>> PlayerHpModifiers = new();
+        public static readonly Dictionary<Player, Dictionary<string, List<int>>> PlayerHpModifiers = new();
 
         public static void RemoveAllHpModifiers(Player player)
         {
@@ -25,22 +25,40 @@ namespace EffectOnHUD
         {
             if (!PlayerHpModifiers.TryGetValue(player, out var mods))
             {
-                mods = new Dictionary<string, int>();
+                mods = new Dictionary<string, List<int>>();
                 PlayerHpModifiers[player] = mods;
             }
-            mods[source] = amount;
+            if (!mods.TryGetValue(source, out var amounts))
+            {
+                amounts = new List<int>();
+                mods[source] = amounts;
+            }
+            amounts.Add(amount);
         }
 
-        public static void RemoveHpModifier(Player player, string source)
+        public static void RemoveHpModifier(Player player, string source, int? amount = null)
         {
             if (PlayerHpModifiers.TryGetValue(player, out var mods))
             {
-                mods.Remove(source);
+                if (mods.TryGetValue(source, out var amounts))
+                {
+                    if (amount.HasValue)
+                    {
+                        amounts.Remove(amount.Value);
+                        if (amounts.Count == 0)
+                            mods.Remove(source);
+                    }
+                    else
+                    {
+                        mods.Remove(source);
+                    }
+                }
                 if (mods.Count == 0)
+                {
                     PlayerHpModifiers.Remove(player);
+                }
             }
         }
-
         private static readonly HashSet<string> BinaryEffects = new HashSet<string>
         {
         "Invisible",
@@ -107,17 +125,18 @@ namespace EffectOnHUD
             response += "MaxHP: " + ActualMaxHp + "\n";
             if (PlayerHpModifiers.TryGetValue(ReadinPlayer, out var modifiers) && modifiers.Count > 0)
             {
-                foreach (var kvp in modifiers) //for each key value pair in the modifiers dictionary
+                foreach (var kvp in modifiers)
                 {
-                    if(kvp.Value > 0)
+                    int total = kvp.Value.Sum();
+                    if (total > 0)
                     {
                         response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
-                        response += $" {kvp.Value} {kvp.Key}\n";
+                        response += $" {total} {kvp.Key}\n";
                     }
                     else
                     {
                         response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">" + "-" + " </color>"; //if the value is positive, show it as a plus
-                        response += $" {kvp.Value * -1} {kvp.Key}\n";
+                        response += $" {total * -1} {kvp.Key}\n";
                     }
                 }
             }
