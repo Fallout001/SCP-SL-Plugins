@@ -15,25 +15,58 @@ namespace EffectOnHUD
 
         public static int roundStartTime = DateTime.Now.Second;
 
+        public static int RoundNumber = LoadRoundNumber();
+
+        private static string statsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StatsTracker");
+        private static string roundNumberFile = Path.Combine(statsDir, "CurrentRoundNumber.txt");
+
+        private static int LoadRoundNumber()
+        {
+            Directory.CreateDirectory(statsDir);
+            if (File.Exists(roundNumberFile))
+            {
+                var text = File.ReadAllText(roundNumberFile);
+                if (int.TryParse(text, out int num))
+                    return num;
+            }
+            return 1;
+        }
+
+        private static void SaveRoundNumber()
+        {
+            File.WriteAllText(roundNumberFile, RoundNumber.ToString());
+        }
+
         public static void SaveCurrentRoundStats()
         {
+            Directory.CreateDirectory(statsDir);
+
+            string filePath = Path.Combine(statsDir, "AllRoundsStats.csv");
+            bool fileExists = File.Exists(filePath);
+
+            var csvLines = new List<string>();
+
+            if (!fileExists)
+            {
+                csvLines.Add("RoundNumber,Timestamp,PluginName,EventType,EventName,RoundTime,ExtraData");
+            }
+
             foreach (var statEvent in CurrentRoundStats)
             {
-                string statsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StatsTracker");
-                Directory.CreateDirectory(statsDir);
+                string extraData = statEvent.ExtraData?.Replace("\"", "\"\"") ?? "";
+                if (extraData.Contains(",") || extraData.Contains("\""))
+                    extraData = $"\"{extraData}\"";
 
-                string fileName = $"RoundStats_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
-                string filePath = Path.Combine(statsDir, fileName);
-
-                var line = CurrentRoundStats.Select(statEvent =>
-                $"{statEvent.Timestamp:u} | {statEvent.PluginName} | {statEvent.EventType} | {statEvent.EventName} | {statEvent.RoundTime}s | {statEvent.ExtraData}");
-
-                CL.Error($"Saving stats to {filePath}");
-
-                File.WriteAllLines(filePath, line);
+                csvLines.Add($"{RoundNumber},{statEvent.Timestamp:u},{statEvent.PluginName},{statEvent.EventType},{statEvent.EventName},{statEvent.RoundTime},{extraData}");
             }
-            // Clear the stats after saving just in case 
+
+            CL.Error($"Appending stats to {filePath}");
+
+            File.AppendAllLines(filePath, csvLines);
+
             CurrentRoundStats.Clear();
+            RoundNumber++;
+            SaveRoundNumber();
         }
 
         public static void AddStatEvent(string PluginName, string EventType, string EventName, string ExtraData)
