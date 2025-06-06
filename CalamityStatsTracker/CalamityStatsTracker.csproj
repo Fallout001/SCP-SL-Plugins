@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>EffectOnHUD</AssemblyName>
+		<RootNamespace>EffectOnHUD</RootNamespace>
+        <Description>Shows Status Effects when Keybind Pressed</Description>
+		<Copyright>Fallout01</Copyright>
+
+    <Configurations>LabApi;</Configurations>
+    
+	</PropertyGroup>
+
+</Project>

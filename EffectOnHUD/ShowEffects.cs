@@ -128,15 +128,18 @@ namespace EffectOnHUD
                 foreach (var kvp in modifiers)
                 {
                     int total = kvp.Value.Sum();
-                    if (total > 0)
+                    if (total != 0)
                     {
-                        response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
-                        response += $" {total} {kvp.Key}\n";
-                    }
-                    else
-                    {
-                        response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">" + "-" + " </color>"; //if the value is positive, show it as a plus
-                        response += $" {total * -1} {kvp.Key}\n";
+                        if (total > 0)
+                        {
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
+                            response += $" {total} {kvp.Key}\n";
+                        }
+                        else
+                        {
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">" + "-" + " </color>"; //if the value is positive, show it as a plus
+                            response += $" {total * -1} {kvp.Key}\n";
+                        }
                     }
                 }
             }

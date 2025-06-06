@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulationXpLimiter", "Popu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WelcomeMessage", "WelcomeMessage\WelcomeMessage.csproj", "{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalamityStatsTracker", "CalamityStatsTracker\CalamityStatsTracker.csproj", "{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Exiled|Any CPU = Exiled|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
 		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
 		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LapApi|Any CPU.ActiveCfg = Exiled|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LapApi|Any CPU.Build.0 = Exiled|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
