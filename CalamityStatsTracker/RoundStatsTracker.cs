@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using LabApi;
 using System.IO;
 
-namespace EffectOnHUD
+namespace CalamityStatsTracker
 {
     internal class RoundStatsTracker
     {
         public static List<BaseStatEvent> CurrentRoundStats = new();
 
-        public static int roundStartTime = DateTime.Now.Second;
+        public static DateTime roundStartTime = DateTime.Now;
 
         public static int RoundNumber = LoadRoundNumber();
 
@@ -22,19 +22,33 @@ namespace EffectOnHUD
 
         private static int LoadRoundNumber()
         {
-            Directory.CreateDirectory(statsDir);
-            if (File.Exists(roundNumberFile))
+            try
             {
-                var text = File.ReadAllText(roundNumberFile);
-                if (int.TryParse(text, out int num))
-                    return num;
+                Directory.CreateDirectory(statsDir);
+                if (File.Exists(roundNumberFile))
+                {
+                    var text = File.ReadAllText(roundNumberFile);
+                    if (int.TryParse(text, out int num))
+                        return num;
+                }
+            }
+            catch (Exception ex)
+            {
+                CL.Error($"Error loading round number: {ex}");
             }
             return 1;
         }
 
         private static void SaveRoundNumber()
         {
-            File.WriteAllText(roundNumberFile, RoundNumber.ToString());
+            try
+            {
+                File.WriteAllText(roundNumberFile, RoundNumber.ToString());
+            }
+            catch (Exception ex)
+            {
+                CL.Error($"Error saving round number: {ex}");
+            }
         }
 
         public static void SaveCurrentRoundStats()
@@ -48,6 +62,7 @@ namespace EffectOnHUD
 
             if (!fileExists)
             {
+                CL.Error($"File not exist, adding new lines");
                 csvLines.Add("RoundNumber,Timestamp,PluginName,EventType,EventName,RoundTime,ExtraData");
             }
 
@@ -57,12 +72,16 @@ namespace EffectOnHUD
                 if (extraData.Contains(",") || extraData.Contains("\""))
                     extraData = $"\"{extraData}\"";
 
+                CL.Error($"StatEventWithin list. extra data = {extraData}");
+
                 csvLines.Add($"{RoundNumber},{statEvent.Timestamp:u},{statEvent.PluginName},{statEvent.EventType},{statEvent.EventName},{statEvent.RoundTime},{extraData}");
             }
 
             CL.Error($"Appending stats to {filePath}");
 
             File.AppendAllLines(filePath, csvLines);
+
+            CL.Error($"Appending Done");
 
             CurrentRoundStats.Clear();
             RoundNumber++;
@@ -77,7 +96,7 @@ namespace EffectOnHUD
                 EventType = EventType,
                 EventName = EventName,
                 Timestamp = DateTime.Now,
-                RoundTime = DateTime.Now.Second - roundStartTime,
+                RoundTime = (int)(DateTime.Now - roundStartTime).TotalSeconds,
                 ExtraData = ExtraData
             };
             

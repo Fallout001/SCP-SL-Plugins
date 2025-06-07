@@ -7,7 +7,6 @@ using LabApi.Loader.Features.Plugins;
 using LabApi;
 using MEC;
 using System.Xml.Serialization;
-using EffectOnHUD;
 
 namespace CalamityStatsTracker
 {
@@ -41,26 +40,16 @@ namespace CalamityStatsTracker
 
         void OnRoundStarted()
         {
-            //clear previous stats from last round or etc
-            CL.Error("Round Started ARG");
+            RoundStatsTracker.CurrentRoundStats.Clear(); // Clear stats for new round
+            RoundStatsTracker.roundStartTime = DateTime.Now;
+
             RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundStarted","Round has started");
-            RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundStarted","Round has started");
+
         }
 
-        void OnRoundEnding(RoundEndingEventArgs ev) // Added handler for round ending
+        void OnRoundEnding(RoundEndingEventArgs ev)
         {
-            CL.Error("Round Ended  ARG");
-            var roundEndEvent = new BaseStatEvent
-            {
-                PluginName = "CalamityStatsTracker",
-                EventType = "Round",
-                EventName = "RoundEnded",
-                Timestamp = DateTime.Now,
-                RoundTime = DateTime.Now.Second - RoundStatsTracker.roundStartTime, // Assuming RoundDuration is in seconds
-                ExtraData = $"Winning Team: {ev.LeadingTeam}"
-            };
-            CL.Error("Round Ending and attempt add");
-            RoundStatsTracker.CurrentRoundStats.Add(roundEndEvent);
+            RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundStarted", "Round has started");
 
             RoundStatsTracker.SaveCurrentRoundStats(); // Save stats when round ends
         }
