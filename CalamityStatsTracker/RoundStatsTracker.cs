@@ -62,7 +62,7 @@ namespace CalamityStatsTracker
 
             if (!fileExists)
             {
-                CL.Error($"File not exist, adding new lines");
+                CL.Debug($"File not exist, adding new lines");
                 csvLines.Add("RoundNumber,Timestamp,PluginName,EventType,EventName,RoundTime,ExtraData");
             }
 
@@ -72,16 +72,16 @@ namespace CalamityStatsTracker
                 if (extraData.Contains(",") || extraData.Contains("\""))
                     extraData = $"\"{extraData}\"";
 
-                CL.Error($"StatEventWithin list. extra data = {extraData}");
+                CL.Debug($"StatEventWithin list. extra data = {extraData}");
 
                 csvLines.Add($"{RoundNumber},{statEvent.Timestamp:u},{statEvent.PluginName},{statEvent.EventType},{statEvent.EventName},{statEvent.RoundTime},{extraData}");
             }
 
-            CL.Error($"Appending stats to {filePath}");
+            CL.Debug($"Appending stats to {filePath}");
 
             File.AppendAllLines(filePath, csvLines);
 
-            CL.Error($"Appending Done");
+            CL.Debug($"Appending Done");
 
             CurrentRoundStats.Clear();
             RoundNumber++;
@@ -99,8 +99,8 @@ namespace CalamityStatsTracker
                 RoundTime = (int)(DateTime.Now - roundStartTime).TotalSeconds,
                 ExtraData = ExtraData
             };
-            
-            CL.Error($"Adding stat event: {StatEvent.EventName} at {StatEvent.Timestamp:u}");
+
+            CL.Debug($"Adding stat event: {StatEvent.EventName} at {StatEvent.Timestamp:u}");
             CurrentRoundStats.Add(StatEvent);
 
         }
