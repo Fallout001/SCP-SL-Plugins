@@ -49,7 +49,7 @@ namespace CalamityStatsTracker
 
         void OnRoundEnding(RoundEndingEventArgs ev)
         {
-            RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundStarted", "Round has started");
+            RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundEnded", "Round has ended");
 
             RoundStatsTracker.SaveCurrentRoundStats(); // Save stats when round ends
         }

@@ -9,7 +9,7 @@ using System.IO;
 
 namespace CalamityStatsTracker
 {
-    internal class RoundStatsTracker
+    public class RoundStatsTracker
     {
         public static List<BaseStatEvent> CurrentRoundStats = new();
 

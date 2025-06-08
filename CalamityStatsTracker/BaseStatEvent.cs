@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CalamityStatsTracker
 {
-    internal class BaseStatEvent
+    public class BaseStatEvent
     {
         public string PluginName { get; set; } // name of plugin that sent the event
         public string EventType { get; set; } // the type of event, e.g., "Vault", "Coin"

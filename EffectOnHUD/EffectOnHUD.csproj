@@ -10,4 +10,8 @@
     
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\CalamityStatsTracker\CalamityStatsTracker.csproj" />
+	</ItemGroup>
+
 </Project>
