@@ -1,11 +1,12 @@
 ﻿using InventorySystem.Items.Firearms.ShotEvents;
+using LabApi;
+using LabApi.Loader;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LabApi;
-using System.IO;
 
 namespace CalamityStatsTracker
 {
@@ -17,7 +18,7 @@ namespace CalamityStatsTracker
 
         public static int RoundNumber = LoadRoundNumber();
 
-        private static string statsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "StatsTracker");
+        private static string statsDir = Path.Combine(CalamityStatsTracker.Instance.GetConfigDirectory().FullName, "StatsTracker");
         private static string roundNumberFile = Path.Combine(statsDir, "CurrentRoundNumber.txt");
 
         private static int LoadRoundNumber()

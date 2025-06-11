@@ -1,5 +1,7 @@
-﻿using LabApi;
+﻿using CalamityStatsTracker;
+using LabApi;
 using LabApi.Events;
+using LabApi.Features.Wrappers;
 using MEC;
 using PlayerRoles;
 
@@ -91,6 +93,7 @@ namespace EffectOnHUD
 
             Recipient?.SendHint("", 1); // send blank when done
             ActiveHudCoroutines.Remove(Recipient);
+            RoundStatsTracker.AddStatEvent("EffectOnHud", "KeybindPressed", "ShowEffects", $"player role = {Recipient.Role} , Target Role = {ReadinPlayer.Role}"); // log the event
         }
 
         public static void StartEffectHud(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)

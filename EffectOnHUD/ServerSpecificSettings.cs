@@ -82,7 +82,6 @@ namespace EffectOnHUD
                         if (spectated != null) // if player is spectating a person 
                         {
                             ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, spectated); // run it with that person being spectated effects 
-                            RoundStatsTracker.AddStatEvent("EffectOnHud", "KeybindPressed", "ShowSpectatorEffects", "N/A"); // log the event
                         }
                         else
                         {
@@ -93,7 +92,6 @@ namespace EffectOnHUD
                     {
                         // Show the player's own effects because they are not spectator
                         ShowEffects.StartEffectHud(player, settings.Item1, (int)settings.Item2, player);
-                        RoundStatsTracker.AddStatEvent("EffectOnHud", "KeybindPressed", "ShowOwnEffects", $"player role = {player.Role}"); // log the event
                     }
                 }
             }
