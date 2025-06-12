@@ -1,4 +1,4 @@
-﻿namespace CalamityStatsTracker;
+namespace CalamityStatsTracker;
 
 public static class RoundStatsTracker
 {
