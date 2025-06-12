@@ -22,7 +22,7 @@ public static class RoundStatsTracker
         }
     }
 
-    private static readonly string CurrentRoundNumberPath = Path.Combine(PluginMain.Instance.FilePath, "CurrentRoundNumber.txt");
+    private static readonly string CurrentRoundNumberPath = Path.Combine(PluginMain.Instance.StatsTrackerPath, "CurrentRoundNumber.txt");
 
     internal static int LoadRoundNumber()
     {
