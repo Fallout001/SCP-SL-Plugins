@@ -6,7 +6,7 @@
         <Description>Shows Status Effects when Keybind Pressed</Description>
 		<Copyright>Fallout001</Copyright>
 
-    <Configurations>LabApi; Exiled;</Configurations>
+    <Configurations>LabApi;Exiled</Configurations>
     
 	</PropertyGroup>
 

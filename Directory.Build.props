@@ -1,7 +1,7 @@
 <Project>
 	<!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
 	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Configuration Condition=" '$(Configuration)' == '' ">LabApi</Configuration>
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 		<OutputType>Library</OutputType>
 		<FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
 		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
 		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-		<ExiledVersion>9.6.0-beta7</ExiledVersion>
+		<ExiledVersion>9.6.0</ExiledVersion>
 		<DebugType>pdbonly</DebugType>
 		<Optimize>true</Optimize>
 	</PropertyGroup>
@@ -57,12 +57,12 @@
 		<DefineConstants>EXILED</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(Configuration)' != 'Exiled' ">
+	<ItemGroup Condition=" '$(Configuration)' == 'LabApi' ">
 		<Reference Include="LabApi" Publicize="true" Private="false" />
 		<Using Include="LabApi.Features.Wrappers"/>
 		<Using Include="LabApi.Features.Console.Logger" Alias="CL" />
 	</ItemGroup>
-	<PropertyGroup Condition=" '$(Configuration)' != 'Exiled' ">
+	<PropertyGroup Condition=" '$(Configuration)' == 'LabApi' ">
 		<DefineConstants>LABAPI</DefineConstants>
 	</PropertyGroup>
 </Project>

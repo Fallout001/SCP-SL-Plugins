@@ -14,23 +14,25 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Exiled|Any CPU = Exiled|Any CPU
-		LapApi|Any CPU = LapApi|Any CPU
+		LabApi|Any CPU = LabApi|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F67B91E4-936C-4812-929C-9A4E14693F98}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
 		{F67B91E4-936C-4812-929C-9A4E14693F98}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.LapApi|Any CPU.ActiveCfg = LabApi|Any CPU
-		{F67B91E4-936C-4812-929C-9A4E14693F98}.LapApi|Any CPU.Build.0 = LabApi|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.ActiveCfg = LapApi|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.Build.0 = LapApi|Any CPU
-		{E03B85B1-558A-EDDB-97D5-119F99280D54}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.LabApi|Any CPU.ActiveCfg = LabApi|Any CPU
+		{F67B91E4-936C-4812-929C-9A4E14693F98}.LabApi|Any CPU.Build.0 = LabApi|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.LabApi|Any CPU.ActiveCfg = LabApi|Any CPU
+		{E03B85B1-558A-EDDB-97D5-119F99280D54}.LabApi|Any CPU.Build.0 = LabApi|Any CPU
 		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
 		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
-		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.LapApi|Any CPU.ActiveCfg = LapApi|Any CPU
+		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.LabApi|Any CPU.ActiveCfg = LabApi|Any CPU
+		{CB84D1FD-B8AD-4B9B-901B-97E7ACD9A736}.LabApi|Any CPU.Build.0 = LabApi|Any CPU
 		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.Exiled|Any CPU.ActiveCfg = Exiled|Any CPU
 		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.Exiled|Any CPU.Build.0 = Exiled|Any CPU
-		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LapApi|Any CPU.ActiveCfg = Exiled|Any CPU
-		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LapApi|Any CPU.Build.0 = Exiled|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LabApi|Any CPU.ActiveCfg = LabApi|Any CPU
+		{75267FA4-A4B6-4E26-AAD2-1BE36B6E70A5}.LabApi|Any CPU.Build.0 = LabApi|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
