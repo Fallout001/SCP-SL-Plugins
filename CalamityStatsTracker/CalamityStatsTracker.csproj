@@ -6,8 +6,7 @@
         <Description>Custom Stats Tracker for Calamity</Description>
 		<Copyright>Fallout001</Copyright>
 
-    <Configurations>LabApi; Exiled;</Configurations>
-    
+		<Configurations>LabApi;Exiled</Configurations>
 	</PropertyGroup>
 
 </Project>

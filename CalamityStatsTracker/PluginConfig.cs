@@ -1,11 +1,7 @@
-﻿using LabApi.Events;
-using LabApi;
+﻿namespace CalamityStatsTracker;
 
-namespace CalamityStatsTracker
+public class PluginConfig
 {
-    public class PluginConfig
-    {
-        public bool Debug { get; set; } = false;
+    public bool Debug { get; set; } = false;
 
-    }
 }
