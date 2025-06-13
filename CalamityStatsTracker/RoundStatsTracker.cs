@@ -56,7 +56,7 @@ public static class RoundStatsTracker
 
     public static void SaveCurrentRoundStats()
     {
-        string filePath = Path.Combine(PluginMain.Instance.FilePath, "AllRoundsStats.csv");
+        string filePath = Path.Combine(PluginMain.Instance.StatsTrackerPath, "AllRoundsStats.csv");
         bool fileExists = File.Exists(filePath);
 
         var csvLines = new List<string>();
