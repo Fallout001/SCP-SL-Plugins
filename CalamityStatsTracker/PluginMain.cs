@@ -46,7 +46,8 @@ public class PluginMain : Plugin<PluginConfig>
 
     void OnRoundEnding(RoundEndingEventArgs ev)
     {
-        RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundEnded", "Round has ended");
+
+        RoundStatsTracker.AddStatEvent("CalamityStatsTracker", "Round", "RoundEnded", $"Round has ended, victorious side = {ev.LeadingTeam}");
 
         RoundStatsTracker.SaveCurrentRoundStats(); // Save stats when round ends
     }
