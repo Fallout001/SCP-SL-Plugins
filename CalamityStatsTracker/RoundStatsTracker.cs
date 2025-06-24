@@ -63,7 +63,6 @@ public static class RoundStatsTracker
 
         if (!fileExists)
         {
-            CL.Debug($"File not exist, adding new lines");
             csvLines.Add("RoundNumber,Timestamp,PluginName,EventType,EventName,RoundTime,ExtraData");
         }
 
@@ -73,16 +72,10 @@ public static class RoundStatsTracker
             if (extraData.Contains(",") || extraData.Contains("\""))
                 extraData = $"\"{extraData}\"";
 
-            CL.Debug($"StatEventWithin list. extra data = {extraData}");
-
             csvLines.Add($"{RoundNumber},{statEvent.Timestamp:u},{statEvent.PluginName},{statEvent.EventType},{statEvent.EventName},{statEvent.RoundTime},{extraData}");
         }
 
-        CL.Debug($"Appending stats to {filePath}");
-
         File.AppendAllLines(filePath, csvLines);
-
-        CL.Debug($"Appending Done");
 
         CurrentRoundStats.Clear();
         RoundNumber++;
@@ -101,7 +94,6 @@ public static class RoundStatsTracker
             ExtraData = ExtraData
         };
 
-        CL.Debug($"Adding stat event: {StatEvent.EventName} at {StatEvent.Timestamp:u}");
         CurrentRoundStats.Add(StatEvent);
 
     }
