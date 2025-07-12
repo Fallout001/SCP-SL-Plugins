@@ -67,7 +67,7 @@ namespace EffectOnHUD
             {;
                 if (HUDPluginMain.CanView.TryGetValue(player, out var value) && value == true)
                 {
-                    if (player.Role == RoleTypeId.Spectator || player.Role == RoleTypeId.None) // if the player who pressed it is a spectator
+                    if (player.Role == RoleTypeId.Spectator || player.Role == RoleTypeId.None || player.Role == RoleTypeId.Overwatch) // if the player who pressed it is a spectator
                     {
                         Player spectated = null;
                         foreach (var person in Player.List) //loop through and find who they are spectating 
