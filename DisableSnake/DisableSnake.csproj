@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>DisableSnake</AssemblyName>
+		<RootNamespace>DisableSnake</RootNamespace>
+        <Description>Disables Snake Interaction</Description>
+		<Copyright>Fallout001</Copyright>
+
+    <Configurations>LabApi;Exiled</Configurations>
+    
+	</PropertyGroup>
+</Project>

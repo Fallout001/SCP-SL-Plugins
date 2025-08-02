@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>EndRoundFF</AssemblyName>
+		<RootNamespace>EndRoundFF</RootNamespace>
+        <Description>Friendly Fire at end of round</Description>
+		<Copyright>Fallout001</Copyright>
+
+    <Configurations>LabApi;Exiled</Configurations>
+    
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CalamityStatsTracker\CalamityStatsTracker.csproj" />
+	</ItemGroup>
+
+</Project>
