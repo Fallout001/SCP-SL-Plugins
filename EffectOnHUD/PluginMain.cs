@@ -2,6 +2,7 @@
 using LabApi;
 using LabApi.Events;
 using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.Handlers;
 using LabApi.Loader.Features.Plugins;
 using MEC;
@@ -9,6 +10,7 @@ using PlayerRoles;
 using RemoteAdmin;
 using System;
 using System.Linq;
+using static RoundSummary;
 
 
 namespace EffectOnHUD
@@ -32,6 +34,7 @@ namespace EffectOnHUD
             Instance = this;
             CL.Info("Effect Shown on HUD Plugin Enabled");
             PlayerEvents.ChangedRole += OnPlayerRoleChanged;
+            ServerEvents.RoundEnding += OnRoundEnding;
             ServerSpecificSettings.Initialize();
         }
 
@@ -40,6 +43,7 @@ namespace EffectOnHUD
             Instance = null;
             CL.Info("Effect Shown on HUD Plugin Disabled");
             PlayerEvents.ChangedRole -= OnPlayerRoleChanged;
+            ServerEvents.RoundEnding -= OnRoundEnding;
             ServerSpecificSettings.DeInitialize();
         }
 
@@ -56,6 +60,20 @@ namespace EffectOnHUD
             {
                 CanView[ev.Player] = true;
             });
+        }
+
+        private void OnRoundEnding(RoundEndingEventArgs ev)
+        {
+            int uniqueCount = ShowEffects.UniqueUsersThisRound.Count;
+
+                CalamityStatsTracker.RoundStatsTracker.AddStatEvent(
+                    "EffectOnHud",
+                    "UniqueUsers",
+                    "ShowEffects",
+                    $"UniqueUserCount={uniqueCount}"
+                );
+
+            ShowEffects.UniqueUsersThisRound.Clear();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace EffectOnHUD
     {
         private static readonly Dictionary<Player, int> PlayerBaseHp = new();
 
+        public static readonly HashSet<string> UniqueUsersThisRound = new();
+
         public static readonly Dictionary<Player, Dictionary<string, List<int>>> PlayerHpModifiers = new();
 
         public static void RemoveAllHpModifiers(Player player)
@@ -98,6 +100,15 @@ namespace EffectOnHUD
 
         public static void StartEffectHud(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
+            if (!string.IsNullOrEmpty(Recipient.UserId))
+            {
+                UniqueUsersThisRound.Add(Recipient.UserId);
+            }
+            else
+            {
+                CL.Error("Recipient UserId is null or empty. Cannot track unique users.");
+            }
+
             if (ActiveHudCoroutines.TryGetValue(Recipient, out var handle))
                 Timing.KillCoroutines(handle); //if already coroutine running for it kill it 
 
@@ -108,6 +119,7 @@ namespace EffectOnHUD
 
         public static void ShowEffectsOnHUD(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
+
             string response;
 
             if (Recipient == ReadinPlayer)
