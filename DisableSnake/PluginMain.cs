@@ -32,15 +32,10 @@ public class PluginMain : Plugin<PluginConfig>
 
     private void InspectingCard(LabApi.Events.Arguments.PlayerEvents.PlayerInspectingKeycardEventArgs ev)
     {
+        ev.IsAllowed = true;
         if (ev.KeycardItem.Type == ItemType.KeycardChaosInsurgency || PluginMain.Instance.Config.DisableSnake)
         {
             ev.IsAllowed = false;
-            return;
-        }
-        else
-        {
-            ev.IsAllowed = true;
-            return;
         }
     }
 }
