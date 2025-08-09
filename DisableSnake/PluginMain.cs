@@ -35,6 +35,12 @@ public class PluginMain : Plugin<PluginConfig>
         if (ev.KeycardItem.Type == ItemType.KeycardChaosInsurgency || PluginMain.Instance.Config.DisableSnake)
         {
             ev.IsAllowed = false;
+            return;
+        }
+        else
+        {
+            ev.IsAllowed = true;
+            return;
         }
     }
 }
