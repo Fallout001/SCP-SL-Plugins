@@ -4,6 +4,7 @@ using LabApi.Events;
 using LabApi.Features.Wrappers;
 using MEC;
 using PlayerRoles;
+using HintFrameworkHub;
 
 namespace EffectOnHUD
 {
@@ -93,7 +94,7 @@ namespace EffectOnHUD
                 yield return Timing.WaitForSeconds(1f);
             }
 
-            Recipient?.SendHint("", 1); // send blank when done
+            HintSystem.ShowHint(Recipient, "", 1, HintSystem.HintType.InformationLeft, true);
             ActiveHudCoroutines.Remove(Recipient);
             RoundStatsTracker.AddStatEvent("EffectOnHud", "KeybindPressed", "ShowEffects", $"player role = {Recipient.Role} , Target Role = {ReadinPlayer.Role}"); // log the event
         }
@@ -217,7 +218,7 @@ namespace EffectOnHUD
                 }
             }
             response += "</size></align>";
-            Recipient.SendHint(response, HUDPluginMain.Instance.Config.EffectDisplayDuration);
+            HintSystem.ShowHint(Recipient, response, 1.0f, HintSystem.HintType.InformationLeft, true);
         }
 
         private static string GetFormattedIntensity(string effectName, float intensity)

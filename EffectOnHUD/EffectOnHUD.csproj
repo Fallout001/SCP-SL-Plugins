@@ -14,4 +14,13 @@
 	  <ProjectReference Include="..\CalamityStatsTracker\CalamityStatsTracker.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="HintFrameworkHub">
+	    <HintPath>3rdParty\HintFrameworkHub.dll</HintPath>
+	  </Reference>
+	  <Reference Include="HintServiceMeow">
+	    <HintPath>3rdParty\HintServiceMeow-LabAPI.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>
