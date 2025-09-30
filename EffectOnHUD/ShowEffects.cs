@@ -1,10 +1,6 @@
 ﻿using CalamityStatsTracker;
-using LabApi;
-using LabApi.Events;
-using LabApi.Features.Wrappers;
-using MEC;
-using PlayerRoles;
 using HintFrameworkHub;
+using MEC;
 
 namespace EffectOnHUD
 {
@@ -15,6 +11,139 @@ namespace EffectOnHUD
         public static readonly HashSet<string> UniqueUsersThisRound = new();
 
         public static readonly Dictionary<Player, Dictionary<string, List<int>>> PlayerHpModifiers = new();
+
+        private static readonly Dictionary<Player, List<CustomHudEffect>> CustomEffects = new();
+
+        private sealed class CustomHudEffect
+        {
+            public string Name { get; set; }
+            public float Intensity { get; set; }
+            public float DurationSeconds { get; set; }
+            public DateTime StartedAtUtc { get; set; }
+            public DateTime? ExpiresAtUtc { get; set; }
+            public bool IsBinary { get; set; }
+            public string? ColorOverride { get; set; }
+            public string? Source { get; set; }
+
+            public CustomHudEffect(
+                string name,
+                float intensity,
+                float durationSeconds,
+                DateTime startedAtUtc,
+                DateTime? expiresAtUtc,
+                bool isBinary,
+                string? colorOverride,
+                string? source)
+            {
+                Name = name;
+                Intensity = intensity;
+                DurationSeconds = durationSeconds;
+                StartedAtUtc = startedAtUtc;
+                ExpiresAtUtc = expiresAtUtc;
+                IsBinary = isBinary;
+                ColorOverride = colorOverride;
+                Source = source;
+            }
+        }
+
+        private static DateTime? MaxUtc(DateTime? a, DateTime? b)
+        {
+            if (a is null) return b;
+            if (b is null) return a;
+            return a.Value >= b.Value ? a : b;
+        }
+
+        public static void AddCustomEffect(
+     Player player,
+     string name,
+     float intensity = 1f,
+     float durationSeconds = 0f,
+     bool isBinary = false,
+     string? colorOverride = "#FFFFFF",
+     string? source = null)
+        {
+            if (player == null) return;
+
+            if (!CustomEffects.TryGetValue(player, out var list))
+            {
+                list = new List<CustomHudEffect>();
+                CustomEffects[player] = list;
+            }
+
+            var now = DateTime.UtcNow;
+            DateTime? newExpires = durationSeconds > 0 ? now.AddSeconds(durationSeconds) : (DateTime?)null;
+
+            var existingIndex = list.FindIndex(e =>
+                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(e.Source, source, StringComparison.Ordinal));
+
+            if (existingIndex >= 0)
+            {
+                //extend expiry and take the max intensity
+                var effect = list[existingIndex];
+                effect.Intensity = Math.Max(effect.Intensity, intensity);
+                effect.DurationSeconds = durationSeconds;
+                effect.StartedAtUtc = now;
+                effect.ExpiresAtUtc = MaxUtc(effect.ExpiresAtUtc, newExpires);
+                effect.IsBinary = isBinary;
+                if (!string.IsNullOrEmpty(colorOverride))
+                    effect.ColorOverride = colorOverride;
+            }
+            else
+            {
+                // Create new
+                list.Add(new CustomHudEffect(
+                    name,
+                    intensity,
+                    durationSeconds,
+                    now,
+                    newExpires,
+                    isBinary,
+                    colorOverride,
+                    source));
+            }
+        }
+
+        public static bool RemoveCustomEffect(Player player, string name, string? source = null)
+        {
+            if (player == null) return false;
+            if (!CustomEffects.TryGetValue(player, out var list)) return false;
+
+            int removed = list.RemoveAll(e =>
+                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase) &&
+                (source == null || string.Equals(e.Source, source, StringComparison.Ordinal)));
+
+            if (list.Count == 0) CustomEffects.Remove(player);
+
+            return removed > 0;
+        }
+
+        public static void ClearCustomEffects(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+            CustomEffects.Remove(player);
+        }
+
+        private static List<CustomHudEffect> GetActiveCustomEffects(Player player)
+        {
+            if (!CustomEffects.TryGetValue(player, out var list) || list.Count == 0)
+                return new List<CustomHudEffect>();
+
+            var now = DateTime.UtcNow;
+
+            list.RemoveAll(e => e.ExpiresAtUtc.HasValue && e.ExpiresAtUtc.Value <= now);
+
+            if (list.Count == 0)
+            {
+                CustomEffects.Remove(player);
+                return new List<CustomHudEffect>();
+            }
+
+            return list;
+        }
 
         public static void RemoveAllHpModifiers(Player player)
         {
@@ -113,7 +242,7 @@ namespace EffectOnHUD
             if (ActiveHudCoroutines.TryGetValue(Recipient, out var handle))
                 Timing.KillCoroutines(handle); //if already coroutine running for it kill it 
 
-            CoroutineHandle newHandle = Timing.RunCoroutine(UpdateHudCoroutine(Recipient, showIntensity, textSize, ReadinPlayer)); 
+            CoroutineHandle newHandle = Timing.RunCoroutine(UpdateHudCoroutine(Recipient, showIntensity, textSize, ReadinPlayer));
             ActiveHudCoroutines[Recipient] = newHandle; // make a new coroutine for it 
             //do this so that no overlap in coroutines 
         }
@@ -125,11 +254,11 @@ namespace EffectOnHUD
 
             if (Recipient == ReadinPlayer)
             {
-              response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + "Your Effects:" + " \n";
+                response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + "Your Effects:" + " \n";
             }
             else
             {
-              response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + $"{ReadinPlayer.Nickname}'s Effects:" + " \n";
+                response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + $"{ReadinPlayer.Nickname}'s Effects:" + " \n";
             }
 
 
@@ -196,7 +325,7 @@ namespace EffectOnHUD
                             if (effect.Duration != 0)
                             {
                                 response += colorCode + effectName + $"</color> ({(int)effect.TimeLeft} s, {GetFormattedIntensity(effectName, effect.Intensity)})" + "\n";
-                               
+
                             }
                             else
                             {
@@ -217,6 +346,55 @@ namespace EffectOnHUD
                     }
                 }
             }
+
+            var customs = GetActiveCustomEffects(ReadinPlayer);
+            CL.Info("GETACTIVECUSTOMEFFECTS RAN");
+            if (customs == null)
+            {
+                CL.Info("CUSTOMS ARE NULL NOT GOOG");
+            }
+
+            if (customs.Count > 0)
+            {
+                foreach (var e in customs)
+                {
+                    // Color priority: explicit override -> buckets (Good/Misc/else Bad)
+                    string colorCode =
+                        !string.IsNullOrWhiteSpace(e.ColorOverride)
+                            ? $"<color={e.ColorOverride}>"
+                            : (GoodEffects.Contains(e.Name)
+                                ? "<color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">"
+                                : (MiscEffects.Contains(e.Name)
+                                    ? "<color=" + HUDPluginMain.Instance.Config.EffectDisplayColorMixed + ">"
+                                    : "<color=" + HUDPluginMain.Instance.Config.EffectDisplayColorBad + ">"));
+
+                    // Determine time-left text
+                    string timeText;
+                    if (e.ExpiresAtUtc.HasValue)
+                    {
+                        var secs = (int)Math.Max(0, (e.ExpiresAtUtc.Value - DateTime.UtcNow).TotalSeconds);
+                        if (secs == 0) continue; // will be pruned next tick
+                        timeText = $"{secs} s";
+                    }
+                    else
+                    {
+                        timeText = "∞";
+                    }
+
+                    if (e.IsBinary || BinaryEffects.Contains(e.Name))
+                    {
+                        response += colorCode + e.Name + $"</color> ({timeText})" + "\n";
+                    }
+                    else
+                    {
+                        if (showIntensity)
+                            response += colorCode + e.Name + $"</color> ({timeText}, {GetFormattedIntensity(e.Name, e.Intensity)})" + "\n";
+                        else
+                            response += colorCode + e.Name + $"</color> ({timeText})" + "\n";
+                    }
+                }
+            }
+
             response += "</size></align>";
             HintSystem.ShowHint(Recipient, response, 1.0f, HintSystem.HintType.InformationLeft, true);
         }

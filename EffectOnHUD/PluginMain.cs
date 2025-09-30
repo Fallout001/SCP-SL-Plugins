@@ -10,6 +10,7 @@ using PlayerRoles;
 using RemoteAdmin;
 using System;
 using System.Linq;
+using Utils.NonAllocLINQ;
 using static RoundSummary;
 
 
@@ -35,6 +36,7 @@ namespace EffectOnHUD
             CL.Info("Effect Shown on HUD Plugin Enabled");
             PlayerEvents.ChangedRole += OnPlayerRoleChanged;
             ServerEvents.RoundEnding += OnRoundEnding;
+            ServerEvents.RoundStarted += OnRoundStarted;
             ServerSpecificSettings.Initialize();
         }
 
@@ -44,6 +46,7 @@ namespace EffectOnHUD
             CL.Info("Effect Shown on HUD Plugin Disabled");
             PlayerEvents.ChangedRole -= OnPlayerRoleChanged;
             ServerEvents.RoundEnding -= OnRoundEnding;
+            ServerEvents.RoundStarted -= OnRoundStarted;
             ServerSpecificSettings.DeInitialize();
         }
 
@@ -66,14 +69,18 @@ namespace EffectOnHUD
         {
             int uniqueCount = ShowEffects.UniqueUsersThisRound.Count;
 
-                CalamityStatsTracker.RoundStatsTracker.AddStatEvent(
-                    "EffectOnHud",
-                    "UniqueUsers",
-                    "ShowEffects",
-                    $"UniqueUserCount={uniqueCount}"
-                );
+            CalamityStatsTracker.RoundStatsTracker.AddStatEvent(
+                "EffectOnHud",
+                "UniqueUsers",
+                "ShowEffects",
+                $"UniqueUserCount={uniqueCount}"
+            );
 
             ShowEffects.UniqueUsersThisRound.Clear();
+        }
+
+        private void OnRoundStarted()
+        {
         }
     }
 }
