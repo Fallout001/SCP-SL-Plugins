@@ -14,6 +14,8 @@ namespace EffectOnHUD
 
         private static readonly Dictionary<Player, List<CustomHudEffect>> CustomEffects = new();
 
+        private static readonly Dictionary<Player, List<CustomRegenEffect>> RegenEffects = new();
+
         private sealed class CustomHudEffect
         {
             public string Name { get; set; }
@@ -22,8 +24,8 @@ namespace EffectOnHUD
             public DateTime StartedAtUtc { get; set; }
             public DateTime? ExpiresAtUtc { get; set; }
             public bool IsBinary { get; set; }
-            public string? ColorOverride { get; set; }
-            public string? Source { get; set; }
+            public string ColorOverride { get; set; }
+            public string Source { get; set; }
 
             public CustomHudEffect(
                 string name,
@@ -32,8 +34,8 @@ namespace EffectOnHUD
                 DateTime startedAtUtc,
                 DateTime? expiresAtUtc,
                 bool isBinary,
-                string? colorOverride,
-                string? source)
+                string colorOverride,
+                string source)
             {
                 Name = name;
                 Intensity = intensity;
@@ -43,6 +45,30 @@ namespace EffectOnHUD
                 IsBinary = isBinary;
                 ColorOverride = colorOverride;
                 Source = source;
+            }
+        }
+
+        private sealed class CustomRegenEffect
+        {
+            public string Name { get; set; }
+            public float Intensity { get; set; }
+            public float DurationSeconds { get; set; }
+            public DateTime StartedAtUtc { get; set; }
+            public DateTime? ExpiresAtUtc { get; set; }
+
+            public CustomRegenEffect(
+                string name,
+                float intensity,
+                float durationSeconds,
+                DateTime startedAtUtc,
+                DateTime? expiresAtUtc,
+                string? source)
+            {
+                Name = name;
+                Intensity = intensity;
+                DurationSeconds = durationSeconds;
+                StartedAtUtc = startedAtUtc;
+                ExpiresAtUtc = expiresAtUtc;
             }
         }
 
@@ -59,8 +85,8 @@ namespace EffectOnHUD
      float intensity = 1f,
      float durationSeconds = 0f,
      bool isBinary = false,
-     string? colorOverride = "#FFFFFF",
-     string? source = null)
+     string colorOverride = "#FFFFFF",
+     string source = null)
         {
             if (player == null) return;
 
@@ -74,8 +100,7 @@ namespace EffectOnHUD
             DateTime? newExpires = durationSeconds > 0 ? now.AddSeconds(durationSeconds) : (DateTime?)null;
 
             var existingIndex = list.FindIndex(e =>
-                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(e.Source, source, StringComparison.Ordinal));
+                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
 
             if (existingIndex >= 0)
             {
@@ -104,7 +129,7 @@ namespace EffectOnHUD
             }
         }
 
-        public static bool RemoveCustomEffect(Player player, string name, string? source = null)
+        public static bool RemoveCustomEffect(Player player, string name, string source = null)
         {
             if (player == null) return false;
             if (!CustomEffects.TryGetValue(player, out var list)) return false;
@@ -140,6 +165,88 @@ namespace EffectOnHUD
             {
                 CustomEffects.Remove(player);
                 return new List<CustomHudEffect>();
+            }
+
+            return list;
+        }
+
+        public static void AddRegenEffect(
+    Player player,
+    string name,
+    float intensity = 1f,
+    float durationSeconds = 0f, // 0 -> infinite
+    string? source = null)
+        {
+            if (player == null) return;
+
+            if (!RegenEffects.TryGetValue(player, out var list))
+            {
+                list = new List<CustomRegenEffect>(4);
+                RegenEffects[player] = list;
+            }
+
+            var now = DateTime.UtcNow;
+            DateTime? newExpires = durationSeconds > 0 ? now.AddSeconds(durationSeconds) : (DateTime?)null;
+
+            // Refresh by name+source
+            int idx = list.FindIndex(e =>
+                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
+
+            if (idx >= 0)
+            {
+                var e = list[idx];
+                // refresh semantics: keep higher intensity, extend to later expiry, reset start time
+                e.Intensity = Math.Max(e.Intensity, intensity);
+                e.DurationSeconds = durationSeconds;
+                e.StartedAtUtc = now;
+                e.ExpiresAtUtc = MaxUtc(e.ExpiresAtUtc, newExpires);
+            }
+            else
+            {
+                list.Add(new CustomRegenEffect(
+                    name,
+                    intensity,
+                    durationSeconds,
+                    now,
+                    newExpires,
+                    source));
+            }
+        }
+
+        // Remove by name (and optional source)
+        public static bool RemoveRegenEffect(Player player, string name, string? source = null)
+        {
+            if (player == null) return false;
+            if (!RegenEffects.TryGetValue(player, out var list)) return false;
+
+            int removed = list.RemoveAll(e =>
+                string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
+
+            if (list.Count == 0) RegenEffects.Remove(player);
+            return removed > 0;
+        }
+
+        public static void ClearRegenEffects(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+            RegenEffects.Remove(player);
+        }
+
+        private static List<CustomRegenEffect> GetActiveRegenEffects(Player player)
+        {
+            if (!RegenEffects.TryGetValue(player, out var list) || list.Count == 0)
+                return new List<CustomRegenEffect>();
+
+            var now = DateTime.UtcNow;
+            list.RemoveAll(e => e.ExpiresAtUtc.HasValue && e.ExpiresAtUtc.Value <= now);
+
+            if (list.Count == 0)
+            {
+                RegenEffects.Remove(player);
+                return new List<CustomRegenEffect>();
             }
 
             return list;
@@ -286,8 +393,49 @@ namespace EffectOnHUD
                             response += $" {total * -1} {kvp.Key}\n";
                         }
                     }
+                    else
+                    {
+                        response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorMixed + ">" + "+" + " </color>"; //if the value is positive, show it as a plus
+                        response += $"{kvp.Key}\n";
+                    }
                 }
             }
+
+            var regens = GetActiveRegenEffects(ReadinPlayer);
+            if(regens != new List<CustomRegenEffect>())
+            {
+                response += "Regeneration:\n";
+
+                foreach (var regen in regens)
+                {
+                    if (showIntensity)
+                    {
+                        if (regen.ExpiresAtUtc != null)
+                        {
+                            var secs = (int)Math.Max(0, (regen.ExpiresAtUtc.Value - DateTime.UtcNow).TotalSeconds);
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + regen.Name + $"</color> ({secs} s, {GetFormattedIntensity(regen.Name, regen.Intensity)})" + "\n";
+                        }
+                        else
+                        {
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + regen.Name + $"</color> (∞, {GetFormattedIntensity(regen.Name, regen.Intensity)})" + "\n";
+                        }
+                    }
+                    else
+                    {
+                        if (regen.ExpiresAtUtc != null)
+                        {
+                            var secs = (int)Math.Max(0, (regen.ExpiresAtUtc.Value - DateTime.UtcNow).TotalSeconds);
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + regen.Name + $"</color> ({secs} s)" + "\n";
+                        }
+                        else
+                        {
+                            response += $" <color=" + HUDPluginMain.Instance.Config.EffectDisplayColorGood + ">" + regen.Name + $"</color> (∞)" + "\n";
+                        }
+                    }
+                }
+            }
+
+            response += "Effects:\n";
 
             foreach (var effect in ReadinPlayer.ActiveEffects)
             {
@@ -348,10 +496,9 @@ namespace EffectOnHUD
             }
 
             var customs = GetActiveCustomEffects(ReadinPlayer);
-            CL.Info("GETACTIVECUSTOMEFFECTS RAN");
             if (customs == null)
             {
-                CL.Info("CUSTOMS ARE NULL NOT GOOG");
+                //not goog
             }
 
             if (customs.Count > 0)
