@@ -402,9 +402,9 @@ namespace EffectOnHUD
             }
 
             var regens = GetActiveRegenEffects(ReadinPlayer);
-            if(regens != new List<CustomRegenEffect>())
+            if(regens.Count > 0)
             {
-                response += "Regeneration:\n";
+                response += "Regeneration:\n"; 
 
                 foreach (var regen in regens)
                 {
