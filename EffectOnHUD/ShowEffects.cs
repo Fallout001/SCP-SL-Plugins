@@ -357,15 +357,15 @@ namespace EffectOnHUD
         public static void ShowEffectsOnHUD(Player Recipient, bool showIntensity, int textSize, Player ReadinPlayer)
         {
 
-            string response;
+            string response = string.Empty;
 
             if (Recipient == ReadinPlayer)
             {
-                response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + "Your Effects:" + " \n";
+                response = "<size=" + textSize + ">" + "Your Effects:" + "\n";
             }
             else
             {
-                response = "<align=\"" + HUDPluginMain.Instance.Config.EffectDisplayAlignment + "\"><size=" + textSize + ">" + $"{ReadinPlayer.Nickname}'s Effects:" + " \n";
+                response = "<size=" + textSize + ">" + $"{ReadinPlayer.Nickname}'s Effects:" + " \n";
             }
 
 
@@ -542,7 +542,7 @@ namespace EffectOnHUD
                 }
             }
 
-            response += "</size></align>";
+            response += "</size>";
             HintSystem.ShowHint(Recipient, response, 1.0f, HintSystem.HintType.InformationLeft, true);
         }
 
