@@ -4,6 +4,7 @@ using LabApi.Events;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.Handlers;
+using LabApi.Loader;
 using LabApi.Loader.Features.Plugins;
 using MEC;
 using PlayerRoles;
@@ -81,6 +82,15 @@ namespace EffectOnHUD
 
         private void OnRoundStarted()
         {
+        }
+
+        public override void LoadConfigs()
+        {
+            if (!this.TryLoadConfig(ConfigFileName, out PluginConfig config, true))
+            {
+                CL.Warn("Failed to load EffectOnHud Config, using default values.");
+                config = new PluginConfig();
+            }
         }
     }
 }
