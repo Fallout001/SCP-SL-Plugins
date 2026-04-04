@@ -68,6 +68,7 @@ namespace EffectOnHUD
 
         private void OnRoundEnding(RoundEndingEventArgs ev)
         {
+            //Test
             int uniqueCount = ShowEffects.UniqueUsersThisRound.Count;
 
             CalamityStatsTracker.RoundStatsTracker.AddStatEvent(
@@ -91,6 +92,8 @@ namespace EffectOnHUD
                 CL.Warn("Failed to load EffectOnHud Config, using default values.");
                 config = new PluginConfig();
             }
+
+            Config = config;
         }
     }
 }
