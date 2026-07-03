@@ -1,6 +1,6 @@
 # EffectOnHUD
 
-# Summary
+# Summary - OUTDATED
 
 Hi, My name Is Fallout and this is my collection of plugins i have made for SCP:SL Using The LabAPI Framework
 
