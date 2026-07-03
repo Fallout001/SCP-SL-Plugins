@@ -2,6 +2,8 @@
 
 # Summary - OUTDATED
 
+THIS IS ONE OF MY EARLIEST PROJECTS LEARNING LABAPI AND IS IN DESPERATE NEED OF A REWRITE
+
 Hi, My name Is Fallout and this is my collection of plugins i have made for SCP:SL Using The LabAPI Framework
 
 **EffectOnHud** - A serverside Keybind a user can press to show a compact display of their current status effects
